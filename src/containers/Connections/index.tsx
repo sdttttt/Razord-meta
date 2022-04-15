@@ -82,7 +82,7 @@ export default function Connections () {
             sourceIP: c.metadata.sourceIP,
             type: c.metadata.type,
             network: c.metadata.network.toUpperCase(),
-            process: c.metadata.process,
+            process: c.metadata.processPath,
             speed: { upload: c.uploadSpeed, download: c.downloadSpeed },
             completed: !!c.completed,
             original: c,
@@ -101,11 +101,11 @@ export default function Connections () {
     const columns = useMemo(
         () => table.createColumns([
             table.createDataColumn(Columns.Host, { minWidth: 260, width: 260, header: t(`columns.${Columns.Host}`) }),
-            table.createDataColumn(Columns.Process, { minWidth: 100, width: 130, header: t(`columns.${Columns.Process}`) }),
             table.createDataColumn(Columns.Network, { minWidth: 80, width: 80, header: t(`columns.${Columns.Network}`) }),
-            table.createDataColumn(Columns.Type, { minWidth: 120, width: 120, header: t(`columns.${Columns.Type}`) }),
+            table.createDataColumn(Columns.Type, { minWidth: 80, width: 100, header: t(`columns.${Columns.Type}`) }),
             table.createDataColumn(Columns.Chains, { minWidth: 200, width: 200, header: t(`columns.${Columns.Chains}`) }),
             table.createDataColumn(Columns.Rule, { minWidth: 140, width: 140, header: t(`columns.${Columns.Rule}`) }),
+            table.createDataColumn(Columns.Process, { minWidth: 100, width: 130, header: t(`columns.${Columns.Process}`) }),
             table.createDataColumn(
                 row => [row.speed.upload, row.speed.download],
                 {

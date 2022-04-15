@@ -108,31 +108,16 @@ export default function Settings () {
     }, [t, premium])
 
     const logLevelOptions = [
-        { label: ('debug'), value: 'debug' },
-        { label: ('info'), value: 'info' },
-        { label: ('warn'), value: 'warning' },
-        { label: ('error'), value: 'error' },
-        { label: ('silent'), value: 'silent' },
+        { label: ('Debug'), value: 'debug' },
+        { label: ('Info'), value: 'info' },
+        { label: ('Warn'), value: 'warning' },
+        { label: ('Error'), value: 'error' },
+        { label: ('Silent'), value: 'silent' },
     ]
 
     return (
         <div className="page">
             <Header title={t('title')} />
-            <>{
-                clashXData?.isClashX && <Card className="settings-card">
-                    <div className="flex flex-wrap">
-                        <div className="flex w-full py-3 px-8 items-center justify-between md:w-1/2">
-                            <span className="font-bold label">{t('labels.startAtLogin')}</span>
-                            <Switch checked={startAtLogin} onChange={handleStartAtLoginChange}/>
-                        </div>
-                        <div className="flex w-full py-3 px-8 items-center justify-between md:w-1/2">
-                            <span className="font-bold label">{t('labels.setAsSystemProxy')}</span>
-                            <Switch
-                                checked={systemProxy} onChange={handleSetSystemProxy}/>
-                        </div>
-                    </div>
-                </Card>
-            }</>
             <Card className="settings-card">
                 <div className="flex flex-wrap">
                     <div className="flex flex-wrap w-full py-3 px-8 items-center justify-between ">
@@ -163,13 +148,28 @@ export default function Settings () {
                     </div>
                 </div>
             </Card>
-
+            {
+                !isClashX && <Card className="settings-card">
+                    <div className="flex flex-wrap">
+                        <div className="flex w-full py-3 px-8 items-center justify-between md:w-1/2">
+                            <span className="font-bold label">{t('labels.startAtLogin')}</span>
+                            <Switch checked={startAtLogin} onChange={handleStartAtLoginChange}/>
+                        </div>
+                        <div className="flex w-full py-3 px-8 items-center justify-between md:w-1/2">
+                            <span className="font-bold label">{t('labels.setAsSystemProxy')}</span>
+                            <Switch
+                                checked={systemProxy} onChange={handleSetSystemProxy}/>
+                        </div>
+                    </div>
+                </Card>
+            }
             <Card className="settings-card">
                 <div className="flex flex-wrap">
                     <div className="flex flex-wrap w-full py-3 px-8 items-center justify-between md:w-1/2">
                         <span className="font-bold label">{t('labels.mixedProxyPort')}</span>
                         <Input
                             className="w-28"
+                            disabled={isClashX}
                             value={info.mixedProxyPort}
                             onChange={mixedProxyPort => set('mixedProxyPort', +mixedProxyPort)}
                             onBlur={handleMixedPortSave}
@@ -179,6 +179,7 @@ export default function Settings () {
                         <span className="font-bold label">{t('labels.redirProxyPort')}</span>
                         <Input
                             className="w-28"
+                            disabled={isClashX}
                             value={info.redirProxyPort}
                             onChange={redirProxyPort => set('redirProxyPort', +redirProxyPort)}
                             onBlur={handleRedirPortSave}
@@ -190,6 +191,7 @@ export default function Settings () {
                         <span className="font-bold label">{t('labels.socks5ProxyPort')}</span>
                         <Input
                             className="w-28"
+                            disabled={isClashX}
                             value={info.socks5ProxyPort}
                             onChange={socks5ProxyPort => set('socks5ProxyPort', +socks5ProxyPort)}
                             onBlur={handleSocksPortSave}
@@ -199,6 +201,7 @@ export default function Settings () {
                         <span className="font-bold label">{t('labels.httpProxyPort')}</span>
                         <Input
                             className="w-28"
+                            disabled={isClashX}
                             value={info.httpProxyPort}
                             onChange={httpProxyPort => set('httpProxyPort', +httpProxyPort)}
                             onBlur={handleHttpPortSave}
@@ -207,8 +210,8 @@ export default function Settings () {
                     <div className="flex flex-wrap w-full py-3 px-8 items-center justify-between md:w-1/2">
                         <span className="font-bold label">{t('labels.externalController')}</span>
                         <span
-                            className={classnames('external-controller')}
-                            onClick={() => setIdentity(false)}>
+                            className={classnames({ 'modify-btn': !isClashX }, 'external-controller')}
+                            onClick={() => !isClashX && setIdentity(false)}>
                             {`${externalControllerHost}:${externalControllerPort}`}
                         </span>
                     </div>

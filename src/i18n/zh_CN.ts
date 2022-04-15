@@ -16,7 +16,7 @@ const CN = {
             setAsSystemProxy: '设置为系统代理',
             allowConnectFromLan: '允许来自局域网的连接',
             proxyMode: '代理模式',
-            logLevel: '信息等级',
+            logLevel: '日志等级',
             redirProxyPort: 'Redir 代理端口',
             socks5ProxyPort: 'Socks5 代理端口',
             httpProxyPort: 'HTTP 代理端口',
