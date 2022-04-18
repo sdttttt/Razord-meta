@@ -1,7 +1,7 @@
 import classnames from 'classnames'
 import { useMemo } from 'react'
 
-import { formatTraffic } from '@lib/helper'
+import {formatProcess, formatTraffic} from '@lib/helper'
 import { BaseComponentProps } from '@models'
 import { useI18n } from '@stores'
 
@@ -56,8 +56,8 @@ export function ConnectionInfo (props: ConnectionsInfoProps) {
             <div className="flex my-3">
                 <span className="font-bold w-16">{t('info.process')}</span>
                 <span className="font-mono">{
-                    props.connection.metadata?.process
-                        ? `${props.connection.metadata.process}`
+                    props.connection.metadata?.processPath
+                        ? `${formatProcess(props.connection.metadata.processPath)}`
                         : t('info.hostEmpty')
                 }</span>
             </div>
