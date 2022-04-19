@@ -40,11 +40,6 @@ export default function Settings () {
         await fetchGeneral()
     }
 
-    async function handleLogLevelChange (logLevel: string) {
-        await client.updateConfig({ 'log-level': logLevel })
-        await fetchGeneral()
-    }
-
     async function handleStartAtLoginChange (state: boolean) {
         await jsBridge?.setStartAtLogin(state)
         await fetchClashXData()
@@ -89,7 +84,7 @@ export default function Settings () {
         port: externalControllerPort,
     } = apiInfo
 
-    const { allowLan, mode, logLevel } = general
+    const { allowLan, mode } = general
 
     const startAtLogin = clashXData?.startAtLogin ?? false
     const systemProxy = clashXData?.systemProxy ?? false
@@ -106,15 +101,6 @@ export default function Settings () {
         }
         return options
     }, [t, premium])
-
-    const logLevelOptions = [
-        { label: ('Debug'), value: 'debug' },
-        { label: ('Info'), value: 'info' },
-        { label: ('Warn'), value: 'warning' },
-        { label: ('Error'), value: 'error' },
-        { label: ('Silent'), value: 'silent' },
-    ]
-
     return (
         <div className="page">
             <Header title={t('title')} />
@@ -138,18 +124,10 @@ export default function Settings () {
                             onSelect={handleProxyModeChange}
                         />
                     </div>
-                    <div className="flex flex-wrap w-full py-3 px-8 items-center justify-between  ">
-                        <span className="font-bold label">{t('labels.logLevel')}</span>
-                        <ButtonSelect
-                            options={logLevelOptions}
-                            value={camelCase(logLevel)}
-                            onSelect={handleLogLevelChange}
-                        />
-                    </div>
                 </div>
             </Card>
             {
-                !isClashX && <Card className="settings-card">
+                isClashX && <Card className="settings-card">
                     <div className="flex flex-wrap">
                         <div className="flex w-full py-3 px-8 items-center justify-between md:w-1/2">
                             <span className="font-bold label">{t('labels.startAtLogin')}</span>
