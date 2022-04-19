@@ -21,11 +21,11 @@ export default function Logs () {
     const { logLevel } = general
     const doRefresh = () => setRefresh(true)
     const logLevelOptions = [
-        { label: ('debug'), value: 'debug' },
-        { label: ('info'), value: 'info' },
-        { label: ('warn'), value: 'warning' },
-        { label: ('error'), value: 'error' },
-        { label: ('silent'), value: 'silent' },
+        { label: ('Debug'), value: 'debug' },
+        { label: ('Info'), value: 'info' },
+        { label: ('Warn'), value: 'warning' },
+        { label: ('Error'), value: 'error' },
+        { label: ('Silent'), value: 'silent' },
     ]
     const logMap = new Map([
         ['debug', 'text-teal-500'],
