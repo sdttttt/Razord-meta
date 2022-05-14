@@ -23,7 +23,7 @@ export default defineConfig(
                         sizes: '512x512',
                         type: 'image/png',
                     }],
-                    start_url: '/',
+                    start_url: './',
                     short_name: 'Clash Dashboard',
                     name: 'Clash Dashboard',
                 },
