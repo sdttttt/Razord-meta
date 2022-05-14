@@ -29,6 +29,7 @@ const Columns = {
     Upload: 'upload',
     Download: 'download',
     SourceIP: 'sourceIP',
+    DestinationIP: 'destinationIP',
     Time: 'time',
 } as const
 
@@ -81,6 +82,7 @@ export default function Connections () {
             upload: c.upload,
             download: c.download,
             sourceIP: c.metadata.sourceIP,
+            destinationIP: `${c.metadata.remoteDestination ?? c.metadata.destinationIP}`,
             type: c.metadata.type,
             network: c.metadata.network.toUpperCase(),
             process: c.metadata.processPath,
@@ -128,6 +130,7 @@ export default function Connections () {
             table.createDataColumn(Columns.Upload, { minSize: 100, size: 100, header: t(`columns.${Columns.Upload}`), cell: cell => formatTraffic(cell.value) }),
             table.createDataColumn(Columns.Download, { minSize: 100, size: 100, header: t(`columns.${Columns.Download}`), cell: cell => formatTraffic(cell.value) }),
             table.createDataColumn(Columns.SourceIP, { minSize: 140, size: 140, header: t(`columns.${Columns.SourceIP}`), filterFn: 'equals' }),
+            table.createDataColumn(Columns.DestinationIP, { minSize: 140, size: 140, header: t(`columns.${Columns.DestinationIP}`) }),
             table.createDataColumn(
                 Columns.Time,
                 {
