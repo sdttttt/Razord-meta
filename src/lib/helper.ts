@@ -18,11 +18,6 @@ export function formatTraffic (num: number) {
     return `${floor(num / Math.pow(1024, exp), 2).toFixed(2)} ${s?.[exp] ?? ''}`
 }
 
-export function formatProcess (process: string) {
-    if (process !== null) {
-        const pos = process.lastIndexOf('\\')
-        return process.substr(pos + 1)
-    } else {
-        return '<nil>'
-    }
+export function basePath (path: string) {
+    return path.replace(/.*[/\\]/, '')
 }

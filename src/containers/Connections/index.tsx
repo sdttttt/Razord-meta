@@ -1,16 +1,16 @@
-import { useIntersectionObserver, useSyncedRef } from '@react-hookz/web/esm'
-import { useTable, columnFilterRowsFn, createTable, sortRowsFn } from '@tanstack/react-table'
+import { useIntersectionObserver, useSyncedRef, useUnmountEffect } from '@react-hookz/web/esm'
+import { useTableInstance, createTable, getSortedRowModelSync, getColumnFilteredRowModelSync, getCoreRowModelSync } from '@tanstack/react-table'
 import classnames from 'classnames'
 import produce from 'immer'
-import { groupBy, isNil } from 'lodash-es'
+import { groupBy } from 'lodash-es'
 import { useMemo, useLayoutEffect, useRef, useState, useEffect } from 'react'
 
 import { Header, Checkbox, Modal, Icon, Drawer, Card, Button } from '@components'
 import { fromNow } from '@lib/date'
-import { formatProcess, formatTraffic } from '@lib/helper'
+import { basePath, formatTraffic } from '@lib/helper'
 import { useObject, useVisible } from '@lib/hook'
 import * as API from '@lib/request'
-import { BaseComponentProps, RuleType } from '@models'
+import { BaseComponentProps } from '@models'
 import { useClient, useConnectionStreamReader, useI18n } from '@stores'
 
 import { Devices } from './Devices'
@@ -18,21 +18,21 @@ import { ConnectionInfo } from './Info'
 import { Connection, FormatConnection, useConnections } from './store'
 import './style.scss'
 
-enum Columns {
-    Host = 'host',
-    Network = 'network',
-    Process = 'process',
-    Type = 'type',
-    Chains = 'chains',
-    Rule = 'rule',
-    Speed = 'speed',
-    Upload = 'upload',
-    Download = 'download',
-    SourceIP = 'sourceIP',
-    Time = 'time',
-}
+const Columns = {
+    Host: 'host',
+    Network: 'network',
+    Process: 'process',
+    Type: 'type',
+    Chains: 'chains',
+    Rule: 'rule',
+    Speed: 'speed',
+    Upload: 'upload',
+    Download: 'download',
+    SourceIP: 'sourceIP',
+    Time: 'time',
+} as const
 
-const shouldCenter = new Set<string>([Columns.Network, Columns.Type, Columns.Speed, Columns.Upload, Columns.Download, Columns.SourceIP, Columns.Time])
+const shouldCenter = new Set<string>([Columns.Network, Columns.Type, Columns.Speed, Columns.Upload, Columns.Download, Columns.SourceIP, Columns.Time, Columns.Process])
 
 function formatSpeed (upload: number, download: number) {
     switch (true) {
@@ -47,12 +47,13 @@ function formatSpeed (upload: number, download: number) {
     }
 }
 
-const table = createTable<{ Row: FormatConnection }>()
+const table = createTable().setRowType<FormatConnection>()
 
 export default function Connections () {
     const { translation, lang } = useI18n()
     const t = useMemo(() => translation('Connections').t, [translation])
     const connStreamReader = useConnectionStreamReader()
+    const readerRef = useSyncedRef(connStreamReader)
     const client = useClient()
     const cardRef = useRef<HTMLDivElement>(null)
 
@@ -100,21 +101,21 @@ export default function Connections () {
     const intersection = useIntersectionObserver(pinRef, { threshold: [1] })
     const columns = useMemo(
         () => table.createColumns([
-            table.createDataColumn(Columns.Host, { minWidth: 260, width: 260, header: t(`columns.${Columns.Host}`) }),
-            table.createDataColumn(Columns.Network, { minWidth: 80, width: 80, header: t(`columns.${Columns.Network}`) }),
-            table.createDataColumn(Columns.Type, { minWidth: 80, width: 100, header: t(`columns.${Columns.Type}`) }),
-            table.createDataColumn(Columns.Chains, { minWidth: 200, width: 200, header: t(`columns.${Columns.Chains}`) }),
-            table.createDataColumn(Columns.Rule, { minWidth: 140, width: 140, header: t(`columns.${Columns.Rule}`) }),
-            table.createDataColumn(Columns.Process, { minWidth: 100, width: 130, header: t(`columns.${Columns.Process}`), cell: cell => formatProcess(cell.value) }),
+            table.createDataColumn(Columns.Host, { minSize: 260, size: 260, header: t(`columns.${Columns.Host}`) }),
+            table.createDataColumn(Columns.Network, { minSize: 80, size: 80, header: t(`columns.${Columns.Network}`) }),
+            table.createDataColumn(Columns.Type, { minSize: 100, size: 100, header: t(`columns.${Columns.Type}`) }),
+            table.createDataColumn(Columns.Chains, { minSize: 200, size: 200, header: t(`columns.${Columns.Chains}`) }),
+            table.createDataColumn(Columns.Rule, { minSize: 140, size: 140, header: t(`columns.${Columns.Rule}`) }),
+            table.createDataColumn(Columns.Process, { minSize: 100, size: 100, header: t(`columns.${Columns.Process}`), cell: cell => cell.value ? basePath(cell.value) : '-' }),
             table.createDataColumn(
                 row => [row.speed.upload, row.speed.download],
                 {
                     id: Columns.Speed,
                     header: t(`columns.${Columns.Speed}`),
-                    minWidth: 200,
-                    width: 200,
+                    minSize: 200,
+                    size: 200,
                     sortDescFirst: true,
-                    sortType (rowA, rowB) {
+                    sortingFn (rowA, rowB) {
                         const speedA = rowA.original?.speed ?? { upload: 0, download: 0 }
                         const speedB = rowB.original?.speed ?? { upload: 0, download: 0 }
                         return speedA.download === speedB.download
@@ -124,17 +125,17 @@ export default function Connections () {
                     cell: cell => formatSpeed(cell.value[0], cell.value[1]),
                 },
             ),
-            table.createDataColumn(Columns.Upload, { minWidth: 100, width: 100, header: t(`columns.${Columns.Upload}`), cell: cell => formatTraffic(cell.value) }),
-            table.createDataColumn(Columns.Download, { minWidth: 100, width: 100, header: t(`columns.${Columns.Download}`), cell: cell => formatTraffic(cell.value) }),
-            table.createDataColumn(Columns.SourceIP, { minWidth: 140, width: 140, header: t(`columns.${Columns.SourceIP}`), filterType: 'equals' }),
+            table.createDataColumn(Columns.Upload, { minSize: 100, size: 100, header: t(`columns.${Columns.Upload}`), cell: cell => formatTraffic(cell.value) }),
+            table.createDataColumn(Columns.Download, { minSize: 100, size: 100, header: t(`columns.${Columns.Download}`), cell: cell => formatTraffic(cell.value) }),
+            table.createDataColumn(Columns.SourceIP, { minSize: 140, size: 140, header: t(`columns.${Columns.SourceIP}`), filterFn: 'equals' }),
             table.createDataColumn(
                 Columns.Time,
                 {
-                    minWidth: 120,
-                    width: 120,
+                    minSize: 120,
+                    size: 120,
                     header: t(`columns.${Columns.Time}`),
                     cell: cell => fromNow(new Date(cell.value), lang),
-                    sortType: (rowA, rowB) => (rowA.original?.time ?? 0) - (rowB.original?.time ?? 0),
+                    sortingFn: (rowA, rowB) => (rowB.original?.time ?? 0) - (rowA.original?.time ?? 0),
                 },
             ),
         ]),
@@ -156,17 +157,20 @@ export default function Connections () {
         connStreamReader?.subscribe('data', handleConnection)
         return () => {
             connStreamReader?.unsubscribe('data', handleConnection)
-            connStreamReader?.destory()
         }
     }, [connStreamReader, feed, setTraffic])
+    useUnmountEffect(() => {
+        readerRef.current?.destory()
+    })
 
-    const instance = useTable(table, {
+    const instance = useTableInstance(table, {
         data,
         columns,
-        sortRowsFn,
-        columnFilterRowsFn,
+        getCoreRowModel: getCoreRowModelSync(),
+        getSortedRowModel: getSortedRowModelSync(),
+        getColumnFilteredRowModel: getColumnFilteredRowModelSync(),
         initialState: {
-            sorting: [{ id: Columns.Time, desc: true }],
+            sorting: [{ id: Columns.Time, desc: false }],
         },
         columnResizeMode: 'onChange',
         enableColumnResizing: true,
@@ -222,7 +226,7 @@ export default function Connections () {
                             shadow: scrolled && column.id === Columns.Host,
                         })
                         !props.style && (props.style = {})
-                        props.style.width = header.getWidth()
+                        props.style.width = header.getSize()
                     }),
                 )}
                 ref={column.id === Columns.Host ? pinRef : undefined}
@@ -265,7 +269,7 @@ export default function Connections () {
                                     (props: BaseComponentProps) => produce(props, props => {
                                         !props.style && (props.style = {})
                                         props.className = classname
-                                        props.style.width = cell.column.getWidth()
+                                        props.style.width = cell.column.getSize()
                                     }),
                                 )}
                                 key={cell.column.id}>
@@ -304,7 +308,7 @@ export default function Connections () {
                 </div>
             </Card>
             <Modal title={t('closeAll.title')} show={visible} onClose={hide} onOk={handleCloseConnections}>{t('closeAll.content')}</Modal>
-            <Drawer containerRef={cardRef} visible={drawerState.visible} width={450}>
+            <Drawer containerRef={cardRef} bodyClassName="flex flex-col" visible={drawerState.visible} width={450}>
                 <div className="flex h-8 justify-between items-center">
                     <span className="font-bold pl-3">{t('info.title')}</span>
                     <Icon type="close" size={16} className="cursor-pointer" onClick={() => setDrawerState('visible', false)} />
