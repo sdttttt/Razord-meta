@@ -82,7 +82,7 @@ export default function Connections () {
             upload: c.upload,
             download: c.download,
             sourceIP: c.metadata.sourceIP,
-            destinationIP: `${c.metadata.remoteDestination ?? c.metadata.destinationIP}`,
+            destinationIP: `${c.metadata.remoteDestination || c.metadata.destinationIP || c.metadata.host}`,
             type: c.metadata.type,
             network: c.metadata.network.toUpperCase(),
             process: c.metadata.processPath,

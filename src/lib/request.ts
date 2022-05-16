@@ -84,8 +84,8 @@ export interface Connections {
         sourceIP: string
         sourcePort: string
         destinationPort: string
-        destinationIP?: string
-        remoteDestination?: string
+        destinationIP: string
+        remoteDestination: string
     }
     upload: number
     download: number

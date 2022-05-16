@@ -34,18 +34,16 @@ export function ConnectionInfo (props: ConnectionsInfoProps) {
             <div className="flex my-3">
                 <span className="font-bold w-20">{t('info.host')}</span>
                 <span className="font-mono flex-1 break-all">{
-                    props.connection.metadata?.host
-                        ? `${props.connection.metadata.host}:${props.connection.metadata?.destinationPort}`
-                        : props.connection.metadata?.destinationIP
-                            ? `${props.connection.metadata.destinationIP}:${props.connection.metadata?.destinationPort}`
-                            : t('info.hostEmpty')
+                    props.connection.metadata
+                        ? `${props.connection.metadata.host || props.connection.metadata.destinationIP}:${props.connection.metadata?.destinationPort}`
+                        : t('info.hostEmpty')
                 }</span>
             </div>
             <div className="flex my-3">
                 <span className="font-bold w-20">{t('info.dstIP')}</span>
                 <span className="font-mono">{
-                    props.connection.metadata?.remoteDestination
-                        ? `${props.connection.metadata.remoteDestination}`
+                    props.connection.metadata
+                        ? `${(props.connection.metadata?.remoteDestination || props.connection.metadata?.destinationIP || props.connection.metadata?.host)}`
                         : t('info.hostEmpty')
                 }</span>
             </div>
