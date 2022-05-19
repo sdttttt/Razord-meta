@@ -6,8 +6,6 @@ import { VitePWA } from 'vite-plugin-pwa'
 import windiCSS from 'vite-plugin-windicss'
 import tsConfigPath from 'vite-tsconfig-paths'
 
-import logo from '@assets/logo.png'
-
 export default defineConfig(
     env => ({
         plugins: [
@@ -21,7 +19,7 @@ export default defineConfig(
                 injectRegister: 'inline',
                 manifest: {
                     icons: [{
-                        src: { logo },
+                        src: 'https://raw.githubusercontents.com/MetaCubeX/clash-dashboard/master/src/assets/Icon.png',
                         sizes: '512x512',
                         type: 'image/png',
                     }],
