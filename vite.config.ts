@@ -6,6 +6,8 @@ import { VitePWA } from 'vite-plugin-pwa'
 import windiCSS from 'vite-plugin-windicss'
 import tsConfigPath from 'vite-tsconfig-paths'
 
+import logo from '@assets/logo.png'
+
 export default defineConfig(
     env => ({
         plugins: [
@@ -19,7 +21,7 @@ export default defineConfig(
                 injectRegister: 'inline',
                 manifest: {
                     icons: [{
-                        src: '//cdn.jsdelivr.net/gh/Dreamacro/clash-dashboard/src/assets/Icon.png',
+                        src: { logo },
                         sizes: '512x512',
                         type: 'image/png',
                     }],
