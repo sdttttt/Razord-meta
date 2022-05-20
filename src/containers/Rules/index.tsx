@@ -43,7 +43,7 @@ export default function Rules () {
             <li className="rule-item" style={style}>
                 <div className="flex py-1">
                     <div className="text-center w-40 rule-type">{ rule.type }</div>
-                    <div className="flex-1 text-center payload">{ rule.payload }{ rule.Size !== -1 ? ` :: ${rule.Size}` : null}</div>
+                    <div className="flex-1 text-center payload"> {rule.Size !== -1 ? `${rule.payload} :: ${rule.Size}` : rule.payload}</div>
                     <div className="text-center w-40 rule-proxy">{ rule.proxy }</div>
                 </div>
             </li>
