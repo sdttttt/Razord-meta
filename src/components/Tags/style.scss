@@ -13,10 +13,11 @@ $height: 22px;
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid $color-primary-dark;
+        border: 1px solid $background;
         color: $color-primary-darken;
+        min-width: 90px;
         height: $height;
-        border-radius: math.div($height, 2);
+        border-radius: math.div($height, 10);
         padding: 0 6px;
         margin: 3px 4px;
         font-size: 10px;
@@ -36,7 +37,7 @@ $height: 22px;
     }
 
     .tags-selected {
-        background-color: $color-primary-dark;
+        background-color: $background;
         color: #fff;
     }
 }

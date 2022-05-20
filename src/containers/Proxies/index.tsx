@@ -45,7 +45,7 @@ function ProxyGroups () {
             <div className="flex flex-col">
                 <Header title={t('groupTitle')}>
                     <Checkbox
-                        className="cursor-pointer text-sm text-shadow-primary text-primary-600"
+                        className="cursor-pointer text-sm text-shadow-primary text-[#619cc2]"
                         checked={config.breakConnections}
                         onChange={value => setConfig('breakConnections', value)}>
                         {t('breakConnectionsText')}
@@ -122,17 +122,19 @@ function Proxies () {
                 <Header title={t('title')}>
                     <Icon className="ml-3" type={sortMap[sort]} onClick={handleSort} size={20} />
                     <Icon className="ml-3" type="speed" size={20} />
-                    <span className="proxies-speed-test" onClick={handleNotitySpeedTest}>{t('speedTestText')}</span>
+                    <span className="proxies-speed-test text-[#619cc2]" onClick={handleNotitySpeedTest}>{t('speedTestText')}</span>
                 </Header>
-                <ul className="proxies-list">
-                    {
-                        sortedProxies.map(p => (
-                            <li key={p.name}>
-                                <Proxy config={p} />
-                            </li>
-                        ))
-                    }
-                </ul>
+                <Card className="proxy-provider">
+                    <ul className="proxies-list">
+                        {
+                            sortedProxies.map(p => (
+                                <li key={p.name}>
+                                    <Proxy config={p} />
+                                </li>
+                            ))
+                        }
+                    </ul>
+                </Card>
             </div>
         }
     </>

@@ -46,6 +46,16 @@ export function Group (props: GroupProps) {
         return set
     }, [config.all, proxyMap])
 
+    const delay = useMemo(() => {
+        for (const proxy of config.all) {
+            const history = proxyMap.get(proxy)?.history
+            if (history?.length) {
+                return history.slice(-1)[0].delay
+            }
+        }
+        return 0
+    }, [config.all, proxyMap])
+
     const canClick = config.type === 'Selector'
     return (
         <div className="proxy-group">
@@ -57,6 +67,7 @@ export function Group (props: GroupProps) {
                 <Tags
                     className="ml-5 md:ml-8"
                     data={config.all}
+                    delay={delay}
                     onClick={handleChangeProxySelected}
                     errSet={errSet}
                     select={config.now}

@@ -33,7 +33,7 @@
             height: 36px;
             line-height: 36px;
             font-size: 14px;
-            border-radius: 18px;
+            //border-radius: 18px;
             text-align: center;
         }
 
@@ -45,9 +45,9 @@
         }
 
         > a.active {
-            background: linear-gradient(135deg, $color-primary, $color-primary-dark);
+            background: linear-gradient(90deg, #3b5f76, #619cc2);
             color: $color-white;
-            box-shadow: 0 2px 8px rgba($color: $color-primary-dark, $alpha: 0.5);
+            //box-shadow: 0 2px 8px rgba($color: $color-primary-dark, $alpha: 0.5);
         }
     }
 }
@@ -104,7 +104,7 @@
             margin: 0 3px;
 
             > a {
-                width: 80px;
+                width: 60px;
                 height: 32px;
                 line-height: 32px;
             }

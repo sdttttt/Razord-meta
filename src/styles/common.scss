@@ -1,7 +1,7 @@
 // styles initial
 html {
     box-sizing: border-box;
-    background: rgba($color: $color-white, $alpha: 0.8);
+    background: rgba($color: $background, $alpha: 0.8);
     overflow: hidden;
 }
 
@@ -24,7 +24,7 @@ body {
 
         &-thumb {
             border-radius: 5px;
-            background: #2c8af8;
+            background: #3b5f76;
         }
     }
 
