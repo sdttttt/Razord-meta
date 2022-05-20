@@ -39,12 +39,12 @@ export default function Rules () {
 
     function renderRuleItem ({ index, style }: { index: number, style: React.CSSProperties }) {
         const rule = rules[index]
-        const ruleSize = rule.size || -1
+        const rulesize = rule.size || rule.Size
         return (
             <li className="rule-item" style={style}>
                 <div className="flex py-1">
                     <div className="text-center w-40 rule-type">{ rule.type }</div>
-                    <div className="flex-1 text-center payload"> { ruleSize !== -1 ? `${rule.payload} :: ${rule.size}` : rule.payload }</div>
+                    <div className="flex-1 text-center payload"> { rulesize !== -1 ? `${rule.payload} :: ${rulesize}` : rule.payload }</div>
                     <div className="text-center w-40 rule-proxy">{ rule.proxy }</div>
                 </div>
             </li>
@@ -55,7 +55,7 @@ export default function Rules () {
         <div className="page">
             <RuleProviders />
             <Header className="not-first:mt-7.5" title={t('title')} />
-            <Card className="flex flex-col flex-1 mt-2.5 p-0 md:mt-4 focus:outline-none">
+            <Card className="flex flex-col flex-1 mt-2.5 p-0 md:mt-4 focus:outline-none text-sm">
                 <AutoSizer className="min-h-120">
                     {
                         ({ height, width }) => (
@@ -63,7 +63,7 @@ export default function Rules () {
                                 height={height}
                                 width={width}
                                 itemCount={rules.length}
-                                itemSize={50}
+                                itemSize={40}
                             >
                                 { renderRuleItem }
                             </List>

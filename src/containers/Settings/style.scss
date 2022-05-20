@@ -4,7 +4,7 @@
 
     .label {
         font-size: 14px;
-        color: #3b5f76;
+        color: $color-primary-darken;
     }
 
     .external-controller {
@@ -16,7 +16,7 @@
         line-height: 17px;
 
         &.modify-btn {
-            color: $color-primary;
+            color: $color-primary-darken;
             cursor: pointer;
         }
     }

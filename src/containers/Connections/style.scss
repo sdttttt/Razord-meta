@@ -11,8 +11,8 @@
         display: inline-block;
         position: relative;
         text-align: center;
-        color: $color-gray-darken;
-        background: $color-gray-light;
+        color: $color-primary-darken;
+        background: rgb(97 156 194 / 20%);
         height: $height;
         line-height: $height;
         font-weight: 500;
@@ -95,7 +95,7 @@
             position: sticky;
             left: 0;
             z-index: 998;
-            background-color: $color-white;
+            background-color: rgb(97 156 194 / 0%);
             &.shadow {
                 box-shadow: inset -9px 0 8px -14px $color-black;
             }
