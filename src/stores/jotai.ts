@@ -73,7 +73,7 @@ export function useRuleProviders () {
     const client = useClient()
 
     const { data, mutate } = useSWR(['/providers/rule', client, premium, meta], async () => {
-        if (!premium || !meta) {
+        if (!premium && !meta) {
             return []
         }
 
