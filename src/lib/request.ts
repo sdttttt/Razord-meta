@@ -19,7 +19,6 @@ export interface Rule {
     payload: string
     proxy: string
     size: number
-    Size: number
 }
 
 export interface Proxies {

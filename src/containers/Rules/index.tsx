@@ -39,12 +39,12 @@ export default function Rules () {
 
     function renderRuleItem ({ index, style }: { index: number, style: React.CSSProperties }) {
         const rule = rules[index]
-        const rulesize = rule.size || rule.Size
+        const ruleSize = rule.size || -1
         return (
             <li className="rule-item" style={style}>
                 <div className="flex py-1">
                     <div className="text-center w-40 rule-type">{ rule.type }</div>
-                    <div className="flex-1 text-center payload"> { rulesize !== -1 ? `${rule.payload} :: ${rulesize}` : rule.payload }</div>
+                    <div className="flex-1 text-center payload"> { ruleSize !== -1 ? `${rule.payload} :: ${ruleSize}` : rule.payload }</div>
                     <div className="text-center w-40 rule-proxy">{ rule.proxy }</div>
                 </div>
             </li>
