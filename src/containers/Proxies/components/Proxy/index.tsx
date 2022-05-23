@@ -18,7 +18,7 @@ interface ProxyProps extends BaseComponentProps {
 
 const TagColors = {
     '#909399': 0,
-    '#00c520': 260,
+    '#57b366': 260,
     '#ff9a28': 600,
     '#ff3e5e': Infinity,
 }

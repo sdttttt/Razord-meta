@@ -45,6 +45,7 @@ export function Provider (props: ProvidersProps) {
                 <div className="flex items-center">
                     <span className="mr-6">{ provider.name }</span>
                     <Tag>{ provider.vehicleType }</Tag>
+                    <Tag className="rule-provider-behavior">{ provider.proxies.length }</Tag>
                 </div>
                 <div className="flex pt-3 items-center md:pt-0">
                     {
