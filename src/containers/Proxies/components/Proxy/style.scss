@@ -36,6 +36,14 @@
         color: rgba($color: $color-primary-darken, $alpha: 0.8);
     }
 
+    .proxy-udp {
+        position: absolute;
+        right: 10px;
+        bottom: 13px;
+        font-size: 8px;
+        color: rgba($color: $color-primary-darken, $alpha: 0.3);
+    }
+
     .proxy-editor {
         position: absolute;
         right: 10px;
