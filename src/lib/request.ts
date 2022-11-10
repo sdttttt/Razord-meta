@@ -30,6 +30,7 @@ export interface Provider {
     proxies: Array<Group | Proxy>
     type: 'Proxy'
     vehicleType: 'HTTP' | 'File' | 'Compatible'
+    subscriptionInfo?: SubscriptionInfo
     updatedAt?: string
 }
 
@@ -53,6 +54,13 @@ export interface ProxyProviders {
 interface History {
     time: string
     delay: number
+}
+
+export interface SubscriptionInfo {
+    Download: number
+    Upload: number
+    Total: number
+    Expire: number
 }
 
 export interface Proxy {

@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 
 import { Card, Tag, Icon, Loading } from '@components'
+import { Progress } from '@components/Progress'
 import { compareDesc } from '@containers/Proxies'
 import { Proxy } from '@containers/Proxies/components/Proxy'
 import { fromNow } from '@lib/date'
@@ -9,7 +10,6 @@ import { Provider as IProvider, Proxy as IProxy } from '@lib/request'
 import { useClient, useI18n, useProxyProviders } from '@stores'
 
 import './style.scss'
-
 interface ProvidersProps {
     provider: IProvider
 }
@@ -37,7 +37,6 @@ export function Provider (props: ProvidersProps) {
     const proxies = useMemo(() => {
         return (provider.proxies as IProxy[]).slice().sort((a, b) => -1 * compareDesc(a, b))
     }, [provider.proxies])
-
     return (
         <Card className="proxy-provider">
             <Loading visible={visible} />
@@ -46,6 +45,7 @@ export function Provider (props: ProvidersProps) {
                     <span className="mr-6">{ provider.name }</span>
                     <Tag>{ provider.vehicleType }</Tag>
                     <Tag className="rule-provider-behavior">{ provider.proxies.length }</Tag>
+                    <Progress subscriptionInfo={provider.subscriptionInfo}></Progress>
                 </div>
                 <div className="flex pt-3 items-center md:pt-0">
                     {
