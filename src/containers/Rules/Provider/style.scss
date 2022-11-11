@@ -28,9 +28,13 @@
 
 .rule-provider-behavior {
     width: 80px;
-    margin: 0 20px 0 12px;
+    margin: 0 0 0 12px;
     background-color: $color-primary-dark;
     color: #fff;
+}
+
+.rule-provider-expire {
+    margin: 0 0 0 12px;
 }
 
 .rule-provider-spinner {

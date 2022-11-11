@@ -1,5 +1,6 @@
 .progress {
     width: 250px;
+    margin: 0 20px;
     background-color: rgb(232, 232, 232);
     height: 13px;
     border-radius: 12px;
@@ -26,12 +27,6 @@
         font-size: 12px;
         height: 100%;
         transition: 2s width ease-in-out;
-        color: black;
-    }
-    .g-progress {
-        height: 12px;
-        border-radius: 12px;
-        background: rgb(3, 169, 247);
     }
 }
 

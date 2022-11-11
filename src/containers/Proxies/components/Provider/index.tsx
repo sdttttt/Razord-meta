@@ -28,7 +28,13 @@ export function Provider (props: ProvidersProps) {
         show()
         client.healthCheckProvider(provider.name).then(async () => await update()).finally(() => hide())
     }
-
+    const expireStr = useMemo(() => {
+        const expire = provider.subscriptionInfo?.Expire ? new Date(provider.subscriptionInfo.Expire * 1000) : new Date(0)
+        const getYear = expire.getFullYear().toString() + '-'
+        const getMonth = (expire.getMonth() + 1 < 10 ? '0' + (expire.getMonth() + 1).toString() : expire.getMonth() + 1).toString() + '-'
+        const getDate = expire.getDate().toString() + ' '
+        return (getYear + getMonth + getDate)
+    }, [provider.subscriptionInfo])
     function handleUpdate () {
         show()
         client.updateProvider(provider.name).then(async () => await update()).finally(() => hide())
@@ -45,6 +51,7 @@ export function Provider (props: ProvidersProps) {
                     <span className="mr-6">{ provider.name }</span>
                     <Tag>{ provider.vehicleType }</Tag>
                     <Tag className="rule-provider-behavior">{ provider.proxies.length }</Tag>
+                    { (provider.subscriptionInfo?.Expire !== 0) && <Tag className="rule-provider-expire">Expire: { expireStr }</Tag> }
                     { provider.subscriptionInfo && <Progress subscriptionInfo={provider.subscriptionInfo}></Progress> }
                 </div>
                 <div className="flex pt-3 items-center md:pt-0">
