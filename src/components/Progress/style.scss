@@ -4,10 +4,12 @@
     height: 13px;
     border-radius: 12px;
     overflow: hidden;
+    align-items: center;
+    justify-content: center;
     position: relative;
     box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.8), 6px 2px 12px -2px rgba(0, 0, 0, 0.6);
     .progress-fill {
-        display: flex;
+        display: block;
         background-color: #15222a;
         height: 100%;
         max-width: 100%;
@@ -16,6 +18,9 @@
     }
     .progress-info {
         display: flex;
+        color: #f56c6c;
+        width: 100%;
+        position:absolute;
         align-items: center;
         justify-content: center;
         font-size: 12px;

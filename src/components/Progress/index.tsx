@@ -14,14 +14,14 @@ export function Progress (props: ProgressProps) {
     const style: React.CSSProperties = { ...s }
     const spanProps = { ...props, className, style }
 
-    const used = subscriptionInfo ? formatBytes(subscriptionInfo.Total - subscriptionInfo?.Download - subscriptionInfo?.Upload) : 0
+    const used = subscriptionInfo ? formatBytes(subscriptionInfo?.Download + subscriptionInfo?.Upload) : 0
     const total = subscriptionInfo ? formatBytes(subscriptionInfo.Total) : 0
     const percentage = subscriptionInfo ? (((subscriptionInfo.Download + subscriptionInfo.Upload) / subscriptionInfo.Total) * 100).toFixed(2) : 0
+
     return (
         <div {...spanProps}>
-            <div className='g-progress' style={{ width: (percentage)+'%'}}>
-                <span className="progress-info" >{(used)} / {total} ({percentage.toString() + '%'})</span>
-            </div>
+            <div className="progress-info" >{used} / {total} ({percentage.toString() + '%'})</div>
+            <div className="progress-fill" style={{ width: (percentage).toString() + '%' }}></div>
         </div>
     )
 }

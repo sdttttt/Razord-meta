@@ -45,7 +45,7 @@ export function Provider (props: ProvidersProps) {
                     <span className="mr-6">{ provider.name }</span>
                     <Tag>{ provider.vehicleType }</Tag>
                     <Tag className="rule-provider-behavior">{ provider.proxies.length }</Tag>
-                    <Progress subscriptionInfo={provider.subscriptionInfo}></Progress>
+                    { provider.subscriptionInfo && <Progress subscriptionInfo={provider.subscriptionInfo}></Progress> }
                 </div>
                 <div className="flex pt-3 items-center md:pt-0">
                     {
