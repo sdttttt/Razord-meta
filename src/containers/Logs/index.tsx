@@ -42,8 +42,16 @@ export default function Logs () {
     })
 
     useEffect(() => {
-        function handleLog (newLogs: Log[]) {
-            logsRef.current = logsRef.current.slice().concat(newLogs.map(d => ({ ...d, time: new Date() })))
+        let count = 0
+        async function handleLog (newLogs: Log[]) {
+            if (!newLogs || newLogs.length === 0) {
+                return
+            }
+
+            logsRef.current = logsRef.current.slice(-200).concat(newLogs.map(d => {
+                count++
+                return ({ ...d, time: new Date(), id: count })
+            }))
             setLogs(logsRef.current)
         }
 
@@ -57,14 +65,6 @@ export default function Logs () {
 
     return (
         <div className="page">
-            <Header title={ t('title') } >
-                <span className="text-sm text-primary-darken mr-2">{t('levelLabel')}:</span>
-                <Select
-                    options={logLevelOptions}
-                    value={camelCase(logLevel)}
-                    onSelect={level => setConfig(c => { c.logLevel = level })}
-                />
-            </Header>
 
             <Card className="flex flex-col flex-1 mt-2.5 md:mt-4">
                 <ul className="logs-panel" ref={listRef}>
@@ -72,8 +72,9 @@ export default function Logs () {
                         logs.map(
                             (log, index) => (
                                 <li className="leading-5 inline-block" key={index}>
-                                    <span className="mr-2 text-orange-400">[{ dayjs(log.time).format('YYYY-MM-DD HH:mm:ss') }]</span>
-                                    <span className={logMap.get(log.type)}>[{ log.type.toUpperCase() }]</span>
+                                    <span className="mr-2">[{ log.id }]</span>
+                                    <span className="mr-2 text-orange-400">[{ dayjs(log.time).format('HH:mm:ss') }]</span>
+                                    <span className={logMap.get(log.type)}>[{ log.type }]</span>
                                     <span> { log.payload }</span>
                                 </li>
                             ),
