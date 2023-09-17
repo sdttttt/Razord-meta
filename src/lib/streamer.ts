@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import EventEmitter from 'eventemitter3'
 import { SetRequired } from 'type-fest'
 
@@ -10,8 +11,6 @@ export class StreamReader<T> {
     protected EE = new EventEmitter()
 
     protected config: SetRequired<Config, 'bufferLength' | 'retryInterval'>
-
-    protected innerBuffer: T[] = []
 
     protected url = ''
 
@@ -32,14 +31,8 @@ export class StreamReader<T> {
 
         this.connection = new WebSocket(url.toString())
         this.connection.addEventListener('message', msg => {
-            const data = JSON.parse(msg.data)
+            const data = { ...JSON.parse(msg.data), time: dayjs(new Date()).format('HH:mm:ss') }
             this.EE.emit('data', [data])
-            if (this.config.bufferLength > 0) {
-                this.innerBuffer.push(data)
-                if (this.innerBuffer.length > this.config.bufferLength) {
-                    this.innerBuffer.splice(0, this.innerBuffer.length - this.config.bufferLength)
-                }
-            }
         })
 
         this.connection.addEventListener('error', err => {
@@ -64,10 +57,6 @@ export class StreamReader<T> {
 
     unsubscribe (event: string, callback: (data: T[]) => void) {
         this.EE.removeListener(event, callback)
-    }
-
-    buffer () {
-        return this.innerBuffer.slice()
     }
 
     destory () {

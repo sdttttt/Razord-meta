@@ -247,7 +247,7 @@ export function useRule () {
     return { rules: data, update }
 }
 
-const logsAtom = atom(new StreamReader<Log>({ bufferLength: 200 }))
+const logsAtom = atom(new StreamReader<Log>({ bufferLength: 0 }))
 
 export function useLogsStreamReader () {
     const apiInfo = useAPIInfo()
