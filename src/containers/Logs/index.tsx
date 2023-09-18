@@ -1,20 +1,12 @@
 
-import { useEffect, useRef, useState, useRe } from 'react'
-import { Select, Card, Header } from '@components'
+import { mean, min, max, round, last } from 'lodash-es'
+import { useEffect, useRef, useState } from 'react'
+
 import { Log } from '@models/Log'
-import { useConfig, useI18n, useLogsStreamReader } from '@stores'
+import { useLogsStreamReader } from '@stores'
 
 import './style.scss'
-import { current } from 'immer'
 
-const logLevelOptions = [
-    { label: 'Default', value: '' },
-    { label: 'Debug', value: 'debug' },
-    { label: 'Info', value: 'info' },
-    { label: 'Warn', value: 'warning' },
-    { label: 'Error', value: 'error' },
-    { label: 'Silent', value: 'silent' },
-]
 const logMap: { [k: string]: string } = {
     debug: 'text-teal-500',
     info: 'text-sky-500',
@@ -47,20 +39,20 @@ export default function Logs () {
     const logsRef = useRef<Log[]>([])
     const [logs, setLogs] = useState<Log[]>([])
     const logsStreamReader = useLogsStreamReader()
-    const logs3600S = useRef<number[]>([])
+    const logSecArr = useRef<number[]>([])
 
     const count = useRef(0)
     const countMark = useRef(0)
 
     useInterval(() => {
-        logs3600S.current = [...logs3600S.current, count.current - countMark.current]
+        logSecArr.current = [...logSecArr.current, count.current - countMark.current].slice(0 - 2 ** 14)
         countMark.current = count.current
-        const n = logs3600S.current.reduce((t, v) => (t + v), 0) / logs3600S.current.length
-        document.title = `(${Math.floor(n)}/s)${count.current}`
+        const n = mean(logSecArr.current)
+        document.title = `(${round(n, 2)}/s)${count.current}`
     }, 1000)
 
     useEffect(() => {
-        const logLevelLenMax = Object.keys(logMap).map(t => t.length).reduce((total, v) => (total > v ? total : v))
+        const logLevelLenMax = max(Object.keys(logMap).map(t => t.length)) ?? 0
         console.log(`logLevelLenMax: ${logLevelLenMax}`)
 
         function handleLog (newLogs: Log[]) {
@@ -117,7 +109,7 @@ export default function Logs () {
                         logs.map(
                             (log, index) => (
                                 <li className="leading-3 inline-block" key={index}>
-                                    <span className="mr-1 text-orange-400">{'<'}{log.id}{'>'}{ log.time }</span>
+                                    <span className="mr-1 text-orange-400">{ log.time }</span>
                                     <span className={logMap[log.type]}>{ log.t }</span>
                                     <span className="ml-1">{ log.payload }</span>
                                 </li>
@@ -125,10 +117,8 @@ export default function Logs () {
                         )
                     }
                 </ul>
-                <pre className="mr-1 text-orange-400">{`${Math.floor(logs3600S.current.reduce((t, v) => (t + v), 0) / logs3600S.current.length)}/s max=${Math.max(...logs3600S.current)} min=${Math.min(...logs3600S.current)} total${count.current}`}</pre>
+                <pre className="mr-1 text-orange-400">{`${round(mean(logSecArr.current), 2)}/s current=${last(logSecArr.current)} max=${max(logSecArr.current)} min=${min(logSecArr.current)} total=${count.current} [${logSecArr.current.length}]`}</pre>
             </div>
         </div>
     )
 }
-/* The above code is declaring a readonly property called `shadowRoot` which can hold a value of
-either `ShadowRoot` or `null`. */

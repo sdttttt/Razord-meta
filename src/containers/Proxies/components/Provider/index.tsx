@@ -1,63 +1,64 @@
-import { useMemo } from "react";
-import { Card, Tag, Icon, Loading } from "@components";
-import { Progress } from "@components/Progress";
-import { compareDesc } from "@containers/Proxies";
-import { Proxy } from "@containers/Proxies/components/Proxy";
-import { fromNow } from "@lib/date";
-import { useVisible } from "@lib/hook";
-import { Provider as IProvider, Proxy as IProxy } from "@lib/request";
-import { useClient, useI18n, useProxyProviders } from "@stores";
-import "./style.scss";
+import { useMemo } from 'react'
+
+import { Card, Tag, Icon, Loading } from '@components'
+import { Progress } from '@components/Progress'
+import { compareDesc } from '@containers/Proxies'
+import { Proxy } from '@containers/Proxies/components/Proxy'
+import { fromNow } from '@lib/date'
+import { useVisible } from '@lib/hook'
+import { Provider as IProvider, Proxy as IProxy } from '@lib/request'
+import { useClient, useI18n, useProxyProviders } from '@stores'
+import './style.scss'
 
 interface ProvidersProps {
-    provider: IProvider;
+    provider: IProvider
 }
 
-export function Provider(props: ProvidersProps) {
-    const { update } = useProxyProviders();
-    const { translation, lang } = useI18n();
-    const client = useClient();
+export function Provider (props: ProvidersProps) {
+    const { update } = useProxyProviders()
+    const { translation, lang } = useI18n()
+    const client = useClient()
 
-    const { provider } = props;
-    const { t } = translation("Proxies");
+    const { provider } = props
+    const { t } = translation('Proxies')
 
-    const { visible, hide, show } = useVisible();
+    const { visible, hide, show } = useVisible()
 
-    function handleHealthChech() {
-        show();
+    function handleHealthChech () {
+        show()
         client
             .healthCheckProvider(provider.name)
             .then(async () => await update())
-            .finally(() => hide());
+            .finally(() => hide())
     }
     const expireStr = useMemo(() => {
         if (!provider.subscriptionInfo?.Expire) {
             return
         }
 
-        const expire = new Date(provider.subscriptionInfo.Expire * 1000);
-        const getYear = expire.getFullYear().toString() + "-";
+        const expire = new Date(provider.subscriptionInfo.Expire * 1000)
+        const getYear = expire.getFullYear().toString() + '-'
         const getMonth =
             (expire.getMonth() + 1 < 10
-                ? "0" + (expire.getMonth() + 1).toString()
+                ? '0' + (expire.getMonth() + 1).toString()
                 : expire.getMonth() + 1
-            ).toString() + "-";
-        const getDate = expire.getDate().toString() + " ";
-        return getYear + getMonth + getDate;
-    }, [provider.subscriptionInfo]);
-    function handleUpdate() {
-        show();
+            ).toString() + '-'
+        const getDate = expire.getDate().toString() + ' '
+        return getYear + getMonth + getDate
+    }, [provider.subscriptionInfo])
+    function handleUpdate () {
+        show()
         client
             .updateProvider(provider.name)
             .then(async () => await update())
-            .finally(() => hide());
+            .finally(() => hide())
     }
 
     const proxies = useMemo(() => {
         return (provider.proxies as IProxy[])
             .slice()
-            .sort((a, b) => -1 * compareDesc(a, b));
-    }, [provider.proxies]);
+            .sort((a, b) => -1 * compareDesc(a, b))
+    }, [provider.proxies])
 
     return (
         <Card className="proxy-provider">
@@ -84,10 +85,10 @@ export function Provider(props: ProvidersProps) {
                 <div className="flex pt-3 items-center md:pt-0 flex-none">
                     {provider.updatedAt && (
                         <span className="text-sm">{`${t(
-                            "providerUpdateTime"
+                            'providerUpdateTime',
                         )}: ${fromNow(
                             new Date(provider.updatedAt),
-                            lang
+                            lang,
                         )}`}</span>
                     )}
                     <Icon
@@ -112,5 +113,5 @@ export function Provider(props: ProvidersProps) {
                 ))}
             </ul>
         </Card>
-    );
+    )
 }
